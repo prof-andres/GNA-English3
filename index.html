@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gendarmería Nacional - Módulo Dual (UK/US) de Fonética y Deletreo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gna: {
+                            dark: '#080E0B',
+                            slate: '#0F1813',
+                            card: '#14231B',
+                            border: '#1E362A',
+                            green: '#0B3C2A',
+                            emerald: '#16533A',
+                            gold: '#D4AF37',
+                            goldHover: '#E6C200',
+                            skyblue: '#5297D1',
+                            accent: '#226F4D',
+                            redTactical: '#8B0000'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Tactical Background Grid Pattern */
+        .tactical-bg {
+            background-color: #080E0B;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(22, 83, 58, 0.3) 0%, transparent 75%),
+                linear-gradient(rgba(20, 35, 27, 0.45) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20, 35, 27, 0.45) 1px, transparent 1px);
+            background-size: 100% 100%, 32px 32px, 32px 32px;
+        }
+
+        /* Glow and Highlight Effects */
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        .emerald-glow {
+            box-shadow: 0 0 15px rgba(22, 83, 58, 0.6);
+        }
+        
+        .letter-card-active {
+            border-color: #D4AF37 !important;
+            background-color: #1A3326 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Pulse animation for voice output */
+        @keyframes audioPulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        .animate-audio-pulse {
+            animation: audioPulse 1.2s infinite ease-in-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080E0B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E362A;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+    </style>
+</head>
+<body class="tactical-bg text-gray-100 min-h-screen flex flex-col font-sans selection:bg-gna-gold selection:text-gna-dark">
+
+    <!-- TOP OFFICIAL HEADER BAR -->
+    <header class="border-b border-gna-border bg-gna-slate/95 backdrop-blur sticky top-0 z-50 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                
+                <!-- GNA Badge & Header Title -->
+                <div class="flex items-center gap-3 text-center lg:text-left w-full lg:w-auto justify-center lg:justify-start">
+                    <!-- GNA Shield SVG Emblem -->
+                    <div class="relative w-12 h-12 flex-shrink-0 flex items-center justify-center bg-gna-green rounded-lg border border-gna-gold/70 shadow-md">
+                        <svg class="w-8 h-8 text-gna-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#0B3C2A"/>
+                            <path d="M12 6v12M8 10l8 4M16 10l-8 4" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-gna-skyblue rounded-full border-2 border-gna-dark" title="Escudo Nacional Integrado"></div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-center lg:justify-start gap-2">
+                            <span class="text-xs font-mono tracking-widest text-gna-gold font-bold uppercase">Gendarmería Nacional Argentina</span>
+                            <span class="px-1.5 py-0.5 text-[10px] font-mono bg-gna-gold/20 text-gna-gold border border-gna-gold/40 rounded">DUAL-ENG-UK/US</span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                            Fonética Operativa y Deletreo (UK 🇬🇧 / US 🇺🇸)
+                        </h1>
+                        <p class="text-xs text-gray-400">Dirección de Educación y Doctrina — Capacitación Lingüística Táctica</p>
+                    </div>
+                </div>
+
+                <!-- CONTROLS: Dialect Switcher, Speech Voice Selector, Audio Speed -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-end gap-3 bg-gna-dark/90 p-2.5 rounded-xl border border-gna-border/80 w-full lg:w-auto">
+                    
+                    <!-- UK vs US Accent Switcher Toggle -->
+                    <div class="flex items-center bg-gna-card p-1 rounded-lg border border-gna-border">
+                        <button id="btn-accent-uk" onclick="setAccentDialect('UK')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-gna-emerald text-gna-gold border border-gna-gold/50 shadow">
+                            <span>🇬🇧</span> UK (British)
+                        </button>
+                        <button id="btn-accent-us" onclick="setAccentDialect('US')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-400 hover:text-white">
+                            <span>🇺🇸</span> US (American)
+                        </button>
+                    </div>
+
+                    <!-- Web Speech Voice Selector Dropdown -->
+                    <div class="flex items-center gap-1 text-xs">
+                        <span class="text-gray-400 font-mono hidden sm:inline">Voz:</span>
+                        <select id="voice-select" onchange="onVoiceSelected()" class="bg-gna-card border border-gna-border text-xs text-gna-gold rounded-lg px-2 py-1.5 focus:outline-none focus:border-gna-gold max-w-[160px] truncate font-mono">
+                            <option value="">Cargando voces...</option>
+                        </select>
+                    </div>
+
+                    <!-- Global Speed Selector (1.0x, 0.7x, 0.5x) -->
+                    <div class="flex items-center gap-1 text-xs">
+                        <button id="btn-speed-1" onclick="setGlobalSpeed(1.0)" class="px-2 py-1 rounded font-mono font-bold transition bg-gna-emerald text-gna-gold border border-gna-gold/40">1.0x</button>
+                        <button id="btn-speed-07" onclick="setGlobalSpeed(0.7)" class="px-2 py-1 rounded font-mono font-bold transition bg-gna-card text-gray-400 border border-gna-border hover:text-white">0.7x</button>
+                        <button id="btn-speed-05" onclick="setGlobalSpeed(0.5)" class="px-2 py-1 rounded font-mono font-bold transition bg-gna-card text-gray-400 border border-gna-border hover:text-white">0.5x</button>
+                    </div>
+
+                    <!-- Radio Squelch Sound Toggle -->
+                    <button id="btn-radio-static" onclick="toggleRadioStaticEffect()" title="Efecto de Radio VHF/Squelch" class="px-2.5 py-1.5 bg-gna-card border border-gna-border rounded-lg text-xs font-mono text-gna-gold flex items-center gap-1.5 hover:border-gna-gold transition">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6v12m-3-9a3 3 0 00-3 3v2a3 3 0 003 3"/></svg>
+                        <span id="radio-static-label" class="text-[11px]">Radio: ON</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- NAVIGATION TABS -->
+        <div class="bg-gna-dark/95 border-t border-gna-border">
+            <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto gap-2 py-2 no-scrollbar">
+                <button onclick="switchTab('tab-alphabet')" id="nav-tab-alphabet" class="nav-btn active-tab flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap bg-gna-emerald text-gna-gold border border-gna-gold/40">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                    1. Tabla Fonética A-Z (UK/US)
+                </button>
+                <button onclick="switchTab('tab-speller')" id="nav-tab-speller" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap text-gray-400 hover:text-white hover:bg-gna-card border border-transparent">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    2. Deletreador de Nombres
+                </button>
+                <button onclick="switchTab('tab-practice')" id="nav-tab-practice" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap text-gray-400 hover:text-white hover:bg-gna-card border border-transparent">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>
+                    3. Dictado Táctico de Radio
+                </button>
+                <button onclick="switchTab('tab-guide')" id="nav-tab-guide" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap text-gray-400 hover:text-white hover:bg-gna-card border border-transparent">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    4. Guía Fonética Hispanohablante
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================================================================= -->
+        <!-- TAB 1: ALPHABET & IPA / NATO GRID WITH DUAL UK/US SUPPORT         -->
+        <!-- ================================================================= -->
+        <section id="tab-alphabet" class="tab-content space-y-6">
+            
+            <!-- Toolbar & Info Panel -->
+            <div class="bg-gna-card border border-gna-border rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-md">
+                <div class="flex items-center gap-3">
+                    <div id="active-dialect-badge" class="px-2.5 py-1 rounded bg-gna-emerald text-gna-gold border border-gna-gold/40 font-mono text-xs font-bold">
+                        DIALECTO ACTIVO: UK 🇬🇧
+                    </div>
+                    <span class="text-xs text-gray-300">
+                        Haga clic en una letra para ver su transcripción IPA exacta y escuchar su pronunciación.
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="setGridMode('all')" id="mode-all" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gna-emerald text-gna-gold border border-gna-gold/40">
+                        Vista Completa
+                    </button>
+                    <button onclick="setGridMode('ipa')" id="mode-ipa" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gna-dark text-gray-300 border border-gna-border hover:bg-gna-slate">
+                        Solo IPA
+                    </button>
+                    <button onclick="setGridMode('nato')" id="mode-nato" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gna-dark text-gray-300 border border-gna-border hover:bg-gna-slate">
+                        Código NATO
+                    </button>
+                    <button onclick="playFullAlphabet()" id="btn-play-all" class="px-3.5 py-1.5 rounded-lg text-xs bg-gna-gold text-gna-dark hover:bg-gna-goldHover transition flex items-center gap-1.5 font-extrabold shadow">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        Reproducir Alfabeto A-Z
+                    </button>
+                </div>
+            </div>
+
+            <!-- Alphabet Grid (26 cards) -->
+            <div id="alphabet-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-3">
+                <!-- Javascript will dynamically inject the 26 letter cards -->
+            </div>
+
+            <!-- Detail Focus Panel -->
+            <div id="letter-detail-card" class="bg-gna-card border border-gna-border rounded-xl p-5 hidden transition-all">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div id="detail-letter" class="text-5xl font-extrabold text-gna-gold bg-gna-dark w-16 h-16 rounded-xl border border-gna-border flex items-center justify-center font-mono shadow-inner">
+                            A a
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span id="detail-ipa-uk" class="text-base font-bold text-gna-skyblue font-mono bg-gna-dark px-2 py-0.5 rounded border border-gna-border">UK: /eɪ/</span>
+                                <span id="detail-ipa-us" class="text-base font-bold text-emerald-400 font-mono bg-gna-dark px-2 py-0.5 rounded border border-gna-border">US: /eɪ/</span>
+                                <span id="detail-nato" class="px-2.5 py-0.5 text-xs font-bold bg-gna-emerald text-gna-gold rounded border border-gna-gold/30">ALPHA</span>
+                            </div>
+                            <p id="detail-spanish-note" class="text-xs text-gray-300 mt-2">
+                                Nota para hispanohablantes: La A en inglés suena como la combinación 'ei'. Nunca como la A española.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Dual Audio Buttons -->
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <button id="detail-play-uk" onclick="playDetailInDialect('UK')" class="flex-1 md:flex-none px-4 py-2 bg-gna-emerald hover:bg-gna-green text-gna-gold border border-gna-gold/40 rounded-lg text-xs font-bold flex items-center justify-center gap-2">
+                            <span>🇬🇧</span> Pronunciación UK
+                        </button>
+                        <button id="detail-play-us" onclick="playDetailInDialect('US')" class="flex-1 md:flex-none px-4 py-2 bg-gna-slate hover:bg-gna-border text-emerald-300 border border-emerald-500/40 rounded-lg text-xs font-bold flex items-center justify-center gap-2">
+                            <span>🇺🇸</span> Pronunciación US
+                        </button>
+                        <button id="detail-play-nato" class="flex-1 md:flex-none px-3 py-2 bg-gna-dark hover:bg-gna-slate text-gray-300 border border-gna-border rounded-lg text-xs font-bold flex items-center justify-center gap-1.5">
+                            NATO
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 2: NAME & SURNAME SPELLING ENGINE WITH UK/US VOICE            -->
+        <!-- ================================================================= -->
+        <section id="tab-speller" class="tab-content hidden space-y-6">
+            <div class="bg-gna-card border border-gna-border rounded-xl p-6 shadow-xl space-y-6">
+                
+                <div class="border-b border-gna-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span class="text-gna-gold font-mono">02.</span> 
+                            Deletreador Táctico de Identidad
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Ingrese un apellido o nombre completo para desglosarlo letra por letra en la variante fonética elegida.
+                        </p>
+                    </div>
+                    <div id="speller-dialect-indicator" class="text-xs font-mono text-gna-gold bg-gna-dark px-3 py-1 rounded-lg border border-gna-border self-start">
+                        Voz de Deletreo: UK 🇬🇧
+                    </div>
+                </div>
+
+                <!-- Input Section -->
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative flex-grow">
+                            <input type="text" id="speller-input" placeholder="Ej: ZURBRIGGEN, BENITEZ, O'DONNELL, SCHMIDT..." value="ZURBRIGGEN" 
+                                class="w-full bg-gna-dark border border-gna-border focus:border-gna-gold rounded-lg px-4 py-3 text-lg font-mono tracking-wider text-white uppercase focus:outline-none focus:ring-1 focus:ring-gna-gold transition">
+                            <button onclick="clearSpellerInput()" class="absolute right-3 top-3.5 text-gray-500 hover:text-white text-xs bg-gna-slate p-1 rounded">
+                                Limpiar
+                            </button>
+                        </div>
+
+                        <button onclick="startSpellOut()" id="btn-spell-action" class="px-6 py-3 bg-gna-gold hover:bg-gna-goldHover text-gna-dark font-extrabold rounded-lg text-sm tracking-wide uppercase transition flex items-center justify-center gap-2 shadow-lg min-w-[180px]">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            Deletrear
+                        </button>
+
+                        <button onclick="stopSpelling()" id="btn-spell-stop" class="hidden px-5 py-3 bg-red-900/80 hover:bg-red-800 text-red-100 font-bold rounded-lg text-sm uppercase transition flex items-center justify-center gap-2 border border-red-600">
+                            Detener
+                        </button>
+                    </div>
+
+                    <!-- Presets for fast testing -->
+                    <div class="space-y-2">
+                        <span class="text-xs text-gna-gold font-semibold uppercase tracking-wider block">Ejemplos Frecuentes en Controles de Identidad:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="loadPreset('ZURBRIGGEN')" class="px-2.5 py-1 bg-gna-dark border border-gna-border hover:border-gna-gold rounded text-xs font-mono text-gray-300">ZURBRIGGEN (Z dialectal)</button>
+                            <button onclick="loadPreset('SCHMIDT')" class="px-2.5 py-1 bg-gna-dark border border-gna-border hover:border-gna-gold rounded text-xs font-mono text-gray-300">SCHMIDT</button>
+                            <button onclick="loadPreset('BENITEZ')" class="px-2.5 py-1 bg-gna-dark border border-gna-border hover:border-gna-gold rounded text-xs font-mono text-gray-300">BENITEZ</button>
+                            <button onclick="loadPreset('GONZALEZ')" class="px-2.5 py-1 bg-gna-dark border border-gna-border hover:border-gna-gold rounded text-xs font-mono text-gray-300">GONZALEZ</button>
+                            <button onclick="loadPreset('O\'DONNELL')" class="px-2.5 py-1 bg-gna-dark border border-gna-border hover:border-gna-gold rounded text-xs font-mono text-gray-300">O'DONNELL</button>
+                            <button onclick="loadPreset('SCHNEIDER')" class="px-2.5 py-1 bg-gna-dark border border-gna-border hover:border-gna-gold rounded text-xs font-mono text-gray-300">SCHNEIDER (R final)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Breakdown Board -->
+                <div class="bg-gna-dark border border-gna-border rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-gna-border/60 pb-3">
+                        <span class="text-xs font-mono uppercase text-gray-400">Desglose Fonético Secuencial:</span>
+                        <span id="speller-count" class="text-xs font-mono text-gna-gold">0 letras</span>
+                    </div>
+
+                    <div id="speller-cards-container" class="flex flex-wrap gap-2 min-h-[120px] items-center justify-start py-2">
+                        <!-- Cards injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Guidance Box -->
+                <div class="bg-gna-emerald/20 border border-gna-emerald rounded-lg p-4 text-xs text-gray-300 space-y-1">
+                    <span class="font-bold text-gna-gold block">Diferencia Dialectal en Deletreo Operativo:</span>
+                    <p>
+                        Observe la letra <strong class="text-gna-gold">Z</strong>: En inglés británico (UK) se deletrea como <strong class="text-gna-gold font-mono">"ZED"</strong> (/zɛd/), mientras que en inglés americano (US) se pronuncia <strong class="text-gna-gold font-mono">"ZEE"</strong> (/ziː/).
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 3: TACTICAL RADIO DICTATION WITH STATIC SOUND                 -->
+        <!-- ================================================================= -->
+        <section id="tab-practice" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left Panel: Game Controller -->
+                <div class="lg:col-span-2 bg-gna-card border border-gna-border rounded-xl p-6 space-y-6">
+                    <div class="border-b border-gna-border pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="text-gna-gold font-mono">03.</span> 
+                                Dictado Táctico por Radio VHF
+                            </h2>
+                            <p class="text-xs text-gray-400 mt-1">
+                                Transmisión simulada de control de patrulla. Escuche y transcriba la identificación.
+                            </p>
+                        </div>
+
+                        <!-- Dictation Dialect Select -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">Dialecto:</span>
+                            <select id="dictation-accent-mode" onchange="generateNewDictationTarget()" class="bg-gna-dark border border-gna-border text-xs text-gna-gold rounded-lg p-2 focus:outline-none font-mono">
+                                <option value="UK">Solo UK 🇬🇧</option>
+                                <option value="US">Solo US 🇺🇸</option>
+                                <option value="MIXED">Mixto Aleatorio (UK/US)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Category Selector & Radio HUD Display -->
+                    <div class="flex items-center justify-between bg-gna-slate p-3 rounded-lg border border-gna-border text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="text-gray-400 font-mono">Categoría:</span>
+                            <select id="dictation-category" onchange="generateNewDictationTarget()" class="bg-gna-dark border border-gna-border text-xs text-white rounded p-1.5 focus:outline-none">
+                                <option value="surnames">Apellidos Complejos</option>
+                                <option value="names">Nombres de Identidad</option>
+                                <option value="codes">Matrículas / Patentes</option>
+                            </select>
+                        </div>
+
+                        <div id="dictation-radio-freq" class="font-mono text-gna-gold text-xs flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                            FREQ: 154.200 MHz
+                        </div>
+                    </div>
+
+                    <!-- Audio Trigger Section -->
+                    <div class="bg-gna-dark border border-gna-border rounded-xl p-8 flex flex-col items-center justify-center text-center space-y-5 relative overflow-hidden">
+                        
+                        <div id="dictation-audio-indicator" class="w-20 h-20 rounded-full bg-gna-emerald/40 border-2 border-gna-gold flex items-center justify-center text-gna-gold shadow-lg transition-all">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                        </div>
+
+                        <div class="space-y-1">
+                            <h3 id="dictation-status-heading" class="text-base font-bold text-white">Transmisión Lista</h3>
+                            <p id="dictation-status-sub" class="text-xs text-gray-400">Presione para escuchar el deletreo por radio</p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-center gap-3">
+                            <button onclick="playDictationAudio()" id="btn-play-dictation" class="px-6 py-3 bg-gna-gold hover:bg-gna-goldHover text-gna-dark font-extrabold rounded-lg text-xs uppercase tracking-wider flex items-center gap-2 shadow-md">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                Escuchar Dictado
+                            </button>
+                            <button onclick="playDictationAudio()" class="px-4 py-3 bg-gna-slate hover:bg-gna-border text-gray-300 font-bold rounded-lg text-xs border border-gna-border flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                Repetir Audio
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer Input & Verification -->
+                    <div class="space-y-4">
+                        <form onsubmit="checkDictationAnswer(event)" class="flex gap-3">
+                            <input type="text" id="dictation-user-input" autocomplete="off" placeholder="Ingrese el nombre/código transcripto..." 
+                                class="flex-grow bg-gna-dark border border-gna-border focus:border-gna-gold rounded-lg px-4 py-3 font-mono tracking-widest uppercase text-white focus:outline-none">
+                            <button type="submit" class="px-6 py-3 bg-gna-emerald hover:bg-gna-green text-gna-gold font-bold rounded-lg text-xs uppercase border border-gna-gold/40 transition">
+                                Verificar
+                            </button>
+                        </form>
+
+                        <!-- Hint Bar -->
+                        <div class="flex items-center justify-between text-xs text-gray-400 px-1">
+                            <button onclick="toggleDictationHint()" class="text-gna-skyblue hover:underline font-mono">
+                                [?] Solicitar Pista Operativa
+                            </button>
+                            <span id="dictation-hint-text" class="hidden font-mono text-gna-gold bg-gna-dark px-2 py-1 rounded border border-gna-border"></span>
+                        </div>
+                    </div>
+
+                    <!-- Result Feedback Banner -->
+                    <div id="dictation-feedback" class="hidden p-4 rounded-lg border text-sm font-bold flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span id="feedback-icon" class="text-xl"></span>
+                            <div>
+                                <div id="feedback-title" class="font-extrabold"></div>
+                                <div id="feedback-detail" class="text-xs font-normal opacity-90"></div>
+                            </div>
+                        </div>
+                        <button onclick="nextDictationQuestion()" class="px-3 py-1.5 bg-gna-dark text-xs font-bold rounded border border-current hover:opacity-80">
+                            Siguiente Transmisión &rarr;
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Right Panel: Scoreboard & Tactical Stats -->
+                <div class="bg-gna-card border border-gna-border rounded-xl p-6 space-y-6 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <h3 class="text-sm font-bold text-gna-gold uppercase tracking-wider border-b border-gna-border pb-3">
+                            Evaluación de Recepción
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-gna-dark p-3 rounded-lg border border-gna-border text-center">
+                                <span class="text-xs text-gray-400 block">Correctos</span>
+                                <span id="score-correct" class="text-2xl font-bold font-mono text-emerald-400">0</span>
+                            </div>
+                            <div class="bg-gna-dark p-3 rounded-lg border border-gna-border text-center">
+                                <span class="text-xs text-gray-400 block">Errores</span>
+                                <span id="score-incorrect" class="text-2xl font-bold font-mono text-red-400">0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gna-dark p-3 rounded-lg border border-gna-border text-center">
+                            <span class="text-xs text-gray-400 block">Racha Positiva</span>
+                            <span id="score-streak" class="text-xl font-bold font-mono text-gna-gold">0 🔥</span>
+                        </div>
+
+                        <div class="border-t border-gna-border pt-4 text-xs space-y-2">
+                            <span class="text-gray-400 block font-semibold">Regla de oro dialéctica:</span>
+                            <p class="text-gray-300 leading-relaxed">
+                                Si escucha <strong class="text-gna-gold">"ZED"</strong>, proviene de un emisor británico (UK). Si escucha <strong class="text-gna-gold">"ZEE"</strong>, proviene de un emisor estadounidense (US). Ambas representan la letra <strong class="text-white">Z</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button onclick="resetScoreboard()" class="w-full py-2 bg-gna-dark hover:bg-gna-slate text-gray-400 text-xs rounded border border-gna-border transition">
+                        Reiniciar Estadísticas
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 4: SPANISH SPEAKERS' PHONETIC GUIDES & COMPARISON MODULE      -->
+        <!-- ================================================================= -->
+        <section id="tab-guide" class="tab-content hidden space-y-6">
+            <div class="bg-gna-card border border-gna-border rounded-xl p-6 shadow-xl space-y-6">
+                
+                <div class="border-b border-gna-border pb-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span class="text-gna-gold font-mono">04.</span> 
+                        Trampas Fonéticas y Comparación Dialectal UK vs US
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Análisis comparativo de errores frecuentes para efectivos de Gendarmería Nacional con entrenamiento dual.
+                    </p>
+                </div>
+
+                <!-- Guidance Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- Card 1: E vs I -->
+                    <div class="bg-gna-dark border border-gna-border rounded-xl p-4 space-y-3 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-gna-gold"></div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-gna-gold font-bold">CONFLICTO MÁXIMO #1</span>
+                            <span class="px-2 py-0.5 text-[10px] bg-red-900/50 text-red-200 border border-red-700 rounded font-bold">CRÍTICO</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white">Las Vocales "E" vs "I"</h3>
+                        <p class="text-xs text-gray-300">
+                            La confusión número uno. La 'E' en inglés se pronuncia como la 'I' española, mientras que la 'I' suena como 'AI'.
+                        </p>
+                        <div class="bg-gna-slate p-3 rounded border border-gna-border text-xs space-y-2 font-mono">
+                            <div class="flex items-center justify-between">
+                                <span>Letra <strong class="text-gna-gold">E</strong> (/iː/):</span>
+                                <div class="flex gap-1">
+                                    <button onclick="speakLetterInDialect('E', 'UK')" class="px-2 py-1 bg-gna-emerald text-gna-gold rounded text-[10px]">🇬🇧 UK</button>
+                                    <button onclick="speakLetterInDialect('E', 'US')" class="px-2 py-1 bg-gna-card text-emerald-300 rounded text-[10px] border border-gna-border">🇺🇸 US</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>Letra <strong class="text-gna-gold">I</strong> (/aɪ/):</span>
+                                <div class="flex gap-1">
+                                    <button onclick="speakLetterInDialect('I', 'UK')" class="px-2 py-1 bg-gna-emerald text-gna-gold rounded text-[10px]">🇬🇧 UK</button>
+                                    <button onclick="speakLetterInDialect('I', 'US')" class="px-2 py-1 bg-gna-card text-emerald-300 rounded text-[10px] border border-gna-border">🇺🇸 US</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Z (Zed vs Zee) -->
+                    <div class="bg-gna-dark border border-gna-border rounded-xl p-4 space-y-3 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-gna-skyblue"></div>
+                        <span class="text-xs font-mono text-gna-skyblue font-bold">DIFERENCIA DIALECTAL CLAVE</span>
+                        <h3 class="text-base font-bold text-white">La Letra "Z" (Zed vs Zee)</h3>
+                        <p class="text-xs text-gray-300">
+                            En Reino Unido y la Mancomunidad de Naciones (UK) se pronuncia <strong class="text-white">ZED</strong>. En Estados Unidos (US) se pronuncia <strong class="text-white">ZEE</strong>.
+                        </p>
+                        <div class="bg-gna-slate p-3 rounded border border-gna-border text-xs space-y-2 font-mono">
+                            <div class="flex items-center justify-between">
+                                <span>UK: <strong class="text-gna-gold">ZED</strong> (/zɛd/)</span>
+                                <button onclick="speakLetterInDialect('Z', 'UK')" class="px-2.5 py-1 bg-gna-emerald text-gna-gold rounded text-[10px] font-bold">Escuchar 🇬🇧 UK</button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>US: <strong class="text-gna-gold">ZEE</strong> (/ziː/)</span>
+                                <button onclick="speakLetterInDialect('Z', 'US')" class="px-2.5 py-1 bg-gna-card text-emerald-300 rounded text-[10px] font-bold border border-gna-border">Escuchar 🇺🇸 US</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: R (Rhotic vs Non-Rhotic) -->
+                    <div class="bg-gna-dark border border-gna-border rounded-xl p-4 space-y-3 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                        <span class="text-xs font-mono text-emerald-400 font-bold">VARIACIÓN FONÉTICA</span>
+                        <h3 class="text-base font-bold text-white">La Letra "R" (/ɑː/ vs /ɑɹ/)</h3>
+                        <p class="text-xs text-gray-300">
+                            En UK (no rótico), la R no marca la fricativa retrofleja al nombrarla (/ɑː/). En US (rótico) tiene un sonido de 'r' arrastrada fuerte (/ɑɹ/).
+                        </p>
+                        <div class="bg-gna-slate p-3 rounded border border-gna-border text-xs space-y-2 font-mono">
+                            <div class="flex items-center justify-between">
+                                <span>UK: <strong class="text-gna-gold">/ɑː/</strong> ("ah")</span>
+                                <button onclick="speakLetterInDialect('R', 'UK')" class="px-2.5 py-1 bg-gna-emerald text-gna-gold rounded text-[10px]">Escuchar 🇬🇧 UK</button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>US: <strong class="text-gna-gold">/ɑɹ/</strong> ("ar")</span>
+                                <button onclick="speakLetterInDialect('R', 'US')" class="px-2.5 py-1 bg-gna-card text-emerald-300 rounded text-[10px] border border-gna-border">Escuchar 🇺🇸 US</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: G vs J -->
+                    <div class="bg-gna-dark border border-gna-border rounded-xl p-4 space-y-3 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-2 h-full bg-purple-500"></div>
+                        <span class="text-xs font-mono text-purple-400 font-bold">CONSONANTES CONFUSAS</span>
+                        <h3 class="text-base font-bold text-white">Las Consonantes "G" vs "J"</h3>
+                        <p class="text-xs text-gray-300">
+                            Ambas inician con la consonante Africada /dʒ/, pero cambian en la vocal terminal: G termina en 'i', J termina en 'ei'.
+                        </p>
+                        <div class="bg-gna-slate p-3 rounded border border-gna-border text-xs space-y-2 font-mono">
+                            <div class="flex items-center justify-between">
+                                <span>Letra <strong class="text-gna-gold">G</strong> (/dʒiː/):</span>
+                                <button onclick="speakLetterInDialect('G', activeAccent)" class="px-2 py-1 bg-gna-emerald text-gna-gold rounded text-[10px]">Escuchar G</button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span>Letra <strong class="text-gna-gold">J</strong> (/dʒeɪ/):</span>
+                                <button onclick="speakLetterInDialect('J', activeAccent)" class="px-2 py-1 bg-gna-emerald text-gna-gold rounded text-[10px]">Escuchar J</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gna-border bg-gna-slate py-4 text-center text-xs text-gray-500 font-mono">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>GENDARMERÍA NACIONAL ARGENTINA — MÓDULO LINGÜÍSTICO DUAL (UK/US)</span>
+            <span class="text-gna-gold/80">CAPACITACIÓN TÁCTICA PARA INTERCOMPATIBILIDAD INTERNACIONAL</span>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        /* ====================================================================
+           1. DATA STRUCTURE: ALPHABET DATA WITH DUAL UK / US IPA & NOTES
+           ==================================================================== */
+        const ALPHABET_DATA = [
+            { char: 'A', ipaUK: '/eɪ/', ipaUS: '/eɪ/', nato: 'ALPHA', badge: null, note: 'Suena como "ei". ¡Nunca la A española!' },
+            { char: 'B', ipaUK: '/biː/', ipaUS: '/biː/', nato: 'BRAVO', badge: null, note: 'Bilabial suave, juntando ambos labios.' },
+            { char: 'C', ipaUK: '/siː/', ipaUS: '/siː/', nato: 'CHARLIE', badge: null, note: 'Suena como "si".' },
+            { char: 'D', ipaUK: '/diː/', ipaUS: '/diː/', nato: 'DELTA', badge: null, note: 'Suena como "di".' },
+            { char: 'E', ipaUK: '/iː/', ipaUS: '/iː/', nato: 'ECHO', badge: null, note: '¡Atención! Suena como la "i" latina larga.' },
+            { char: 'F', ipaUK: '/ɛf/', ipaUS: '/ɛf/', nato: 'FOXTROT', badge: null, note: 'Suena "ef".' },
+            { char: 'G', ipaUK: '/dʒiː/', ipaUS: '/dʒiː/', nato: 'GOLF', badge: null, note: 'Confusión común con J. G suena "dji".' },
+            { char: 'H', ipaUK: '/eɪtʃ/', ipaUS: '/eɪtʃ/', nato: 'HOTEL', badge: null, note: 'Suena "eich", no es muda.' },
+            { char: 'I', ipaUK: '/aɪ/', ipaUS: '/aɪ/', nato: 'INDIA', badge: null, note: '¡Atención! Suena "ai". No es la I española.' },
+            { char: 'J', ipaUK: '/dʒeɪ/', ipaUS: '/dʒeɪ/', nato: 'JULIETT', badge: null, note: 'Suena "djei".' },
+            { char: 'K', ipaUK: '/keɪ/', ipaUS: '/keɪ/', nato: 'KILO', badge: null, note: 'Suena "kei".' },
+            { char: 'L', ipaUK: '/ɛl/', ipaUS: '/ɛl/', nato: 'LIMA', badge: null, note: 'Suena "el".' },
+            { char: 'M', ipaUK: '/ɛm/', ipaUS: '/ɛm/', nato: 'MIKE', badge: null, note: 'Suena "em".' },
+            { char: 'N', ipaUK: '/ɛn/', ipaUS: '/ɛn/', nato: 'NOVEMBER', badge: null, note: 'Suena "en".' },
+            { char: 'O', ipaUK: '/əʊ/', ipaUS: '/oʊ/', nato: 'OSCAR', badge: 'VARIA', note: 'UK usa /əʊ/ (schwa inicial), US usa /oʊ/.' },
+            { char: 'P', ipaUK: '/piː/', ipaUS: '/piː/', nato: 'PAPA', badge: null, note: 'Suena "pi".' },
+            { char: 'Q', ipaUK: '/kjuː/', ipaUS: '/kjuː/', nato: 'QUEBEC', badge: null, note: 'Suena "kiu".' },
+            { char: 'R', ipaUK: '/ɑː/', ipaUS: '/ɑɹ/', nato: 'ROMEO', badge: 'VARIA', note: 'UK no rótico (/ɑː/), US rótico fuerte (/ɑɹ/).' },
+            { char: 'S', ipaUK: '/ɛs/', ipaUS: '/ɛs/', nato: 'SIERRA', badge: null, note: 'Suena "es".' },
+            { char: 'T', ipaUK: '/tiː/', ipaUS: '/tiː/', nato: 'TANGO', badge: null, note: 'Suena "ti".' },
+            { char: 'U', ipaUK: '/juː/', ipaUS: '/juː/', nato: 'UNIFORM', badge: null, note: 'Suena "iu".' },
+            { char: 'V', ipaUK: '/viː/', ipaUS: '/viː/', nato: 'VICTOR', badge: null, note: 'Labiodental: dientes superiores sobre labio inferior.' },
+            { char: 'W', ipaUK: '/ˈdʌb.l̩.juː/', ipaUS: '/ˈdʌb.əl.juː/', nato: 'WHISKEY', badge: null, note: 'Suena "dabl-iu".' },
+            { char: 'X', ipaUK: '/ɛks/', ipaUS: '/ɛks/', nato: 'X-RAY', badge: null, note: 'Suena "eks".' },
+            { char: 'Y', ipaUK: '/waɪ/', ipaUS: '/waɪ/', nato: 'YANKEE', badge: null, note: 'Suena "uai".' },
+            { char: 'Z', ipaUK: '/zɛd/', ipaUS: '/ziː/', nato: 'ZULU', badge: 'DISTINTO', note: 'UK se pronuncia ZED (/zɛd/). US se pronuncia ZEE (/ziː/).' }
+        ];
+
+        /* Word Banks for Radio Dictation */
+        const DICTATION_BANKS = {
+            surnames: ["ZURBRIGGEN", "SCHMIDT", "BENITEZ", "GONZALEZ", "KOWALSKI", "SCHNEIDER", "ODONNELL", "RODRIGUEZ", "MCDONALD", "CAMPBELL"],
+            names: ["GEORGE", "CHARLOTTE", "WILLIAM", "ELIZABETH", "ALEXANDER", "CHRISTOPHER", "SAMUEL", "VICTORIA", "BENJAMIN", "ARTHUR"],
+            codes: ["AB123CD", "GNA409", "KP882ZT", "ARG901", "GNA772", "FX109"]
+        };
+
+        /* State Variables */
+        let activeAccent = 'UK'; // 'UK' or 'US'
+        let globalSpeechSpeed = 1.0;
+        let playRadioStatic = true;
+        let currentGridMode = 'all';
+        let selectedLetter = null;
+        
+        let isSpellingActive = false;
+        let spellTimeoutId = null;
+
+        /* Voice State */
+        let availableVoices = [];
+        let selectedVoiceUK = null;
+        let selectedVoiceUS = null;
+
+        /* Web Audio API context for Realistic Radio Static / Squelch Burst */
+        let audioCtx = null;
+
+        function triggerRadioSquelchSound() {
+            if (!playRadioStatic) return;
+
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                // Create short radio noise burst (120ms)
+                const bufferSize = audioCtx.sampleRate * 0.12;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 1400;
+                filter.Q.value = 2.5;
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.11);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                noise.start();
+            } catch (e) {
+                // AudioContext fallback ignored if blocked
+            }
+        }
+
+        function toggleRadioStaticEffect() {
+            playRadioStatic = !playRadioStatic;
+            const label = document.getElementById('radio-static-label');
+            const btn = document.getElementById('btn-radio-static');
+            if (playRadioStatic) {
+                label.innerText = "Radio: ON";
+                btn.className = "px-2.5 py-1.5 bg-gna-card border border-gna-border rounded-lg text-xs font-mono text-gna-gold flex items-center gap-1.5 hover:border-gna-gold transition";
+                triggerRadioSquelchSound();
+            } else {
+                label.innerText = "Radio: OFF";
+                btn.className = "px-2.5 py-1.5 bg-gna-dark border border-gna-border rounded-lg text-xs font-mono text-gray-500 flex items-center gap-1.5 transition";
+            }
+        }
+
+        /* ====================================================================
+           2. SPEECH SYNTHESIS & VOICE MANAGEMENT
+           ==================================================================== */
+        function initSpeechSynthesis() {
+            if (!('speechSynthesis' in window)) return;
+
+            function populateVoices() {
+                availableVoices = window.speechSynthesis.getVoices();
+                const voiceSelect = document.getElementById('voice-select');
+                voiceSelect.innerHTML = '';
+
+                if (availableVoices.length === 0) return;
+
+                // Find standard UK & US voices
+                selectedVoiceUK = availableVoices.find(v => v.lang === 'en-GB' || v.lang === 'en_GB') ||
+                                  availableVoices.find(v => v.lang.startsWith('en') && v.name.includes('UK')) ||
+                                  availableVoices.find(v => v.lang.startsWith('en'));
+
+                selectedVoiceUS = availableVoices.find(v => v.lang === 'en-US' || v.lang === 'en_US') ||
+                                  availableVoices.find(v => v.lang.startsWith('en') && v.name.includes('US')) ||
+                                  availableVoices.find(v => v.lang.startsWith('en'));
+
+                // Populate Dropdown
+                availableVoices.forEach((voice, idx) => {
+                    if (voice.lang.startsWith('en')) {
+                        const option = document.createElement('option');
+                        option.value = idx;
+                        option.innerText = `${voice.name} (${voice.lang})`;
+                        
+                        if (activeAccent === 'UK' && voice === selectedVoiceUK) option.selected = true;
+                        if (activeAccent === 'US' && voice === selectedVoiceUS) option.selected = true;
+
+                        voiceSelect.appendChild(option);
+                    }
+                });
+            }
+
+            populateVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = populateVoices;
+            }
+        }
+
+        function onVoiceSelected() {
+            const idx = document.getElementById('voice-select').value;
+            if (idx !== "" && availableVoices[idx]) {
+                const customVoice = availableVoices[idx];
+                if (activeAccent === 'UK') selectedVoiceUK = customVoice;
+                else selectedVoiceUS = customVoice;
+            }
+        }
+
+        function setAccentDialect(dialect) {
+            activeAccent = dialect;
+            
+            const btnUK = document.getElementById('btn-accent-uk');
+            const btnUS = document.getElementById('btn-accent-us');
+            const badge = document.getElementById('active-dialect-badge');
+            const spellerInd = document.getElementById('speller-dialect-indicator');
+
+            if (dialect === 'UK') {
+                btnUK.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-gna-emerald text-gna-gold border border-gna-gold/50 shadow";
+                btnUS.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-400 hover:text-white";
+                badge.innerText = "DIALECTO ACTIVO: UK 🇬🇧";
+                spellerInd.innerText = "Voz de Deletreo: UK 🇬🇧";
+            } else {
+                btnUS.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-gna-emerald text-gna-gold border border-gna-gold/50 shadow";
+                btnUK.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all text-gray-400 hover:text-white";
+                badge.innerText = "DIALECTO ACTIVO: US 🇺🇸";
+                spellerInd.innerText = "Voz de Deletreo: US 🇺🇸";
+            }
+
+            // Sync Voice Selector UI
+            initSpeechSynthesis();
+
+            // Re-render grid & speller to update IPA transcriptions
+            renderAlphabetGrid();
+            renderSpellerBreakdown();
+        }
+
+        function setGlobalSpeed(speed) {
+            globalSpeechSpeed = speed;
+            ['1', '07', '05'].forEach(s => {
+                const btn = document.getElementById(`btn-speed-${s}`);
+                const isSelected = (s === '1' && speed === 1.0) || (s === '07' && speed === 0.7) || (s === '05' && speed === 0.5);
+                if (isSelected) {
+                    btn.className = "px-2 py-1 rounded font-mono font-bold transition bg-gna-emerald text-gna-gold border border-gna-gold/40";
+                } else {
+                    btn.className = "px-2 py-1 rounded font-mono font-bold transition bg-gna-card text-gray-400 border border-gna-border hover:text-white";
+                }
+            });
+        }
+
+        /* Core Speech Function */
+        function speakText(text, dialect = activeAccent, speedMultiplier = 1.0, onEndCallback = null) {
+            if (!('speechSynthesis' in window)) return;
+
+            window.speechSynthesis.cancel();
+            triggerRadioSquelchSound();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = (dialect === 'UK') ? 'en-GB' : 'en-US';
+            utterance.rate = globalSpeechSpeed * speedMultiplier;
+
+            const targetVoice = (dialect === 'UK') ? selectedVoiceUK : selectedVoiceUS;
+            if (targetVoice) {
+                utterance.voice = targetVoice;
+            }
+
+            if (onEndCallback) {
+                utterance.onend = onEndCallback;
+                utterance.onerror = onEndCallback;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakLetterInDialect(char, dialect) {
+            // For letter Z, specify explicit text if speech engine mispronounces
+            let speakContent = char;
+            if (char === 'Z') {
+                speakContent = (dialect === 'UK') ? 'zed' : 'zee';
+            }
+            speakText(speakContent, dialect, 0.9);
+            highlightActiveCardByChar(char);
+        }
+
+        /* ====================================================================
+           3. TAB 1: ALPHABET GRID LOGIC
+           ==================================================================== */
+        function renderAlphabetGrid() {
+            const grid = document.getElementById('alphabet-grid');
+            grid.innerHTML = '';
+
+            ALPHABET_DATA.forEach(item => {
+                const card = document.createElement('div');
+                card.id = `grid-card-${item.char}`;
+                card.className = "bg-gna-card border border-gna-border hover:border-gna-gold/60 rounded-xl p-3 flex flex-col justify-between cursor-pointer transition transform hover:-translate-y-1 shadow-sm select-none group relative";
+                card.onclick = () => selectAlphabetLetter(item);
+
+                const currentIpa = (activeAccent === 'UK') ? item.ipaUK : item.ipaUS;
+
+                let badgeHtml = '';
+                if (item.badge) {
+                    badgeHtml = `<span class="absolute top-2 right-2 px-1.5 py-0.2 text-[9px] font-mono font-bold bg-gna-gold/20 text-gna-gold border border-gna-gold/40 rounded">${item.badge}</span>`;
+                }
+
+                card.innerHTML = `
+                    ${badgeHtml}
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-mono font-extrabold text-white group-hover:text-gna-gold transition">${item.char} <span class="text-xs font-normal text-gray-400">${item.char.toLowerCase()}</span></span>
+                    </div>
+                    <div class="mt-3 space-y-0.5">
+                        <div class="text-xs font-mono font-bold text-gna-skyblue grid-ipa-view">${currentIpa}</div>
+                        <div class="text-[10px] font-mono tracking-wider font-semibold text-gna-gold/90 uppercase grid-nato-view">${item.nato}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Re-apply current view filter mode
+            setGridMode(currentGridMode);
+        }
+
+        function setGridMode(mode) {
+            currentGridMode = mode;
+            ['all', 'ipa', 'nato'].forEach(m => {
+                const btn = document.getElementById(`mode-${m}`);
+                if (m === mode) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gna-emerald text-gna-gold border border-gna-gold/40";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gna-dark text-gray-300 border border-gna-border hover:bg-gna-slate";
+                }
+            });
+
+            const ipaViews = document.querySelectorAll('.grid-ipa-view');
+            const natoViews = document.querySelectorAll('.grid-nato-view');
+
+            ipaViews.forEach(el => el.style.display = (mode === 'nato') ? 'none' : 'block');
+            natoViews.forEach(el => el.style.display = (mode === 'ipa') ? 'none' : 'block');
+        }
+
+        function selectAlphabetLetter(item) {
+            selectedLetter = item;
+            speakLetterInDialect(item.char, activeAccent);
+
+            const detailCard = document.getElementById('letter-detail-card');
+            detailCard.classList.remove('hidden');
+
+            document.getElementById('detail-letter').innerText = `${item.char} ${item.char.toLowerCase()}`;
+            document.getElementById('detail-ipa-uk').innerText = `UK 🇬🇧: ${item.ipaUK}`;
+            document.getElementById('detail-ipa-us').innerText = `US 🇺🇸: ${item.ipaUS}`;
+            document.getElementById('detail-nato').innerText = item.nato;
+            document.getElementById('detail-spanish-note').innerText = `Nota Fonética: ${item.note}`;
+
+            document.getElementById('detail-play-nato').onclick = () => speakText(item.nato, activeAccent, 0.95);
+        }
+
+        function playDetailInDialect(dialect) {
+            if (selectedLetter) {
+                speakLetterInDialect(selectedLetter.char, dialect);
+            }
+        }
+
+        function highlightActiveCardByChar(char) {
+            const card = document.getElementById(`grid-card-${char.toUpperCase()}`);
+            if (card) {
+                card.classList.add('letter-card-active');
+                setTimeout(() => card.classList.remove('letter-card-active'), 800);
+            }
+        }
+
+        function playFullAlphabet() {
+            let index = 0;
+            function playNext() {
+                if (index >= ALPHABET_DATA.length) return;
+                const item = ALPHABET_DATA[index];
+                selectAlphabetLetter(item);
+                index++;
+                setTimeout(playNext, 1300 / globalSpeechSpeed);
+            }
+            playNext();
+        }
+
+        /* ====================================================================
+           4. TAB 2: NAME & SURNAME SPELLING ENGINE
+           ==================================================================== */
+        function renderSpellerBreakdown() {
+            const inputVal = document.getElementById('speller-input').value.toUpperCase();
+            const container = document.getElementById('speller-cards-container');
+            const countLabel = document.getElementById('speller-count');
+            
+            container.innerHTML = '';
+            
+            if (!inputVal) {
+                countLabel.innerText = "0 letras";
+                container.innerHTML = `<span class="text-xs text-gray-500 italic font-mono">Ingrese un nombre arriba para ver el desglose fonético...</span>`;
+                return;
+            }
+
+            let validLetterCount = 0;
+
+            for (let i = 0; i < inputVal.length; i++) {
+                const char = inputVal[i];
+                const card = document.createElement('div');
+                card.id = `spell-card-${i}`;
+
+                const alphaData = ALPHABET_DATA.find(a => a.char === char);
+
+                if (alphaData) {
+                    validLetterCount++;
+                    const currentIpa = (activeAccent === 'UK') ? alphaData.ipaUK : alphaData.ipaUS;
+                    card.className = "bg-gna-card border border-gna-border rounded-lg p-2.5 min-w-[65px] text-center flex flex-col items-center justify-between transition-all duration-300";
+                    card.innerHTML = `
+                        <span class="text-xl font-extrabold font-mono text-gna-gold">${char}</span>
+                        <span class="text-[11px] font-mono font-bold text-gna-skyblue">${currentIpa}</span>
+                        <span class="text-[9px] font-mono text-gray-400 uppercase">${alphaData.nato}</span>
+                    `;
+                } else if (char === ' ') {
+                    card.className = "bg-gna-dark border border-dashed border-gna-border rounded-lg p-2.5 min-w-[60px] text-center flex flex-col items-center justify-center";
+                    card.innerHTML = `
+                        <span class="text-xs font-mono text-gray-500 font-bold">[ESPACIO]</span>
+                        <span class="text-[9px] font-mono text-gray-600">SPACE</span>
+                    `;
+                } else {
+                    card.className = "bg-gna-card border border-gna-border rounded-lg p-2.5 min-w-[50px] text-center flex flex-col items-center justify-center";
+                    card.innerHTML = `
+                        <span class="text-xl font-extrabold font-mono text-white">${char}</span>
+                        <span class="text-[9px] font-mono text-gray-400">SIGNO</span>
+                    `;
+                }
+
+                container.appendChild(card);
+            }
+
+            countLabel.innerText = `${validLetterCount} letras (${inputVal.length} caracteres)`;
+        }
+
+        function loadPreset(name) {
+            document.getElementById('speller-input').value = name;
+            renderSpellerBreakdown();
+        }
+
+        function clearSpellerInput() {
+            document.getElementById('speller-input').value = '';
+            renderSpellerBreakdown();
+        }
+
+        function startSpellOut() {
+            stopSpelling();
+            const inputVal = document.getElementById('speller-input').value.toUpperCase();
+            if (!inputVal) return;
+
+            isSpellingActive = true;
+            document.getElementById('btn-spell-action').classList.add('hidden');
+            document.getElementById('btn-spell-stop').classList.remove('hidden');
+
+            let index = 0;
+
+            function spellStep() {
+                if (!isSpellingActive || index >= inputVal.length) {
+                    stopSpelling();
+                    return;
+                }
+
+                if (index > 0) {
+                    const prevCard = document.getElementById(`spell-card-${index - 1}`);
+                    if (prevCard) prevCard.classList.remove('letter-card-active');
+                }
+
+                const currentCard = document.getElementById(`spell-card-${index}`);
+                if (currentCard) {
+                    currentCard.classList.add('letter-card-active');
+                    currentCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+
+                const char = inputVal[index];
+                
+                if (/[A-Z]/.test(char)) {
+                    speakLetterInDialect(char, activeAccent);
+                } else if (char === ' ') {
+                    speakText('space', activeAccent, 1.0);
+                } else if (char === "'") {
+                    speakText('apostrophe', activeAccent, 1.0);
+                } else if (char === '-') {
+                    speakText('hyphen', activeAccent, 1.0);
+                }
+
+                index++;
+                const delay = (char === ' ') ? 950 : (850 / globalSpeechSpeed);
+                spellTimeoutId = setTimeout(spellStep, delay);
+            }
+
+            spellStep();
+        }
+
+        function stopSpelling() {
+            isSpellingActive = false;
+            if (spellTimeoutId) clearTimeout(spellTimeoutId);
+            window.speechSynthesis.cancel();
+
+            document.getElementById('btn-spell-action').classList.remove('hidden');
+            document.getElementById('btn-spell-stop').classList.add('hidden');
+
+            document.querySelectorAll('#speller-cards-container > div').forEach(c => c.classList.remove('letter-card-active'));
+        }
+
+        document.getElementById('speller-input').addEventListener('input', renderSpellerBreakdown);
+
+        /* ====================================================================
+           5. TAB 3: TACTICAL RADIO DICTATION MODULE
+           ==================================================================== */
+        let currentDictationTarget = "";
+        let currentDictationDialect = "UK";
+        let scoreCorrect = 0;
+        let scoreIncorrect = 0;
+        let scoreStreak = 0;
+
+        function generateNewDictationTarget() {
+            const cat = document.getElementById('dictation-category').value;
+            const bank = DICTATION_BANKS[cat] || DICTATION_BANKS.surnames;
+            
+            let newTarget = currentDictationTarget;
+            while (newTarget === currentDictationTarget) {
+                newTarget = bank[Math.floor(Math.random() * bank.length)];
+            }
+            currentDictationTarget = newTarget;
+
+            // Accent Mode
+            const accentMode = document.getElementById('dictation-accent-mode').value;
+            if (accentMode === 'MIXED') {
+                currentDictationDialect = (Math.random() > 0.5) ? 'UK' : 'US';
+            } else {
+                currentDictationDialect = accentMode;
+            }
+
+            // UI Reset
+            document.getElementById('dictation-user-input').value = '';
+            document.getElementById('dictation-feedback').classList.add('hidden');
+            document.getElementById('dictation-hint-text').classList.add('hidden');
+
+            const indicator = document.getElementById('dictation-audio-indicator');
+            indicator.className = "w-20 h-20 rounded-full bg-gna-emerald/40 border-2 border-gna-gold flex items-center justify-center text-gna-gold shadow-lg";
+
+            document.getElementById('dictation-status-heading').innerText = `Transmisión Lista (${currentDictationDialect} 📡)`;
+
+            setTimeout(playDictationAudio, 500);
+        }
+
+        function playDictationAudio() {
+            if (!currentDictationTarget) return;
+
+            const indicator = document.getElementById('dictation-audio-indicator');
+            indicator.classList.add('animate-audio-pulse');
+
+            let index = 0;
+
+            function speakNextChar() {
+                if (index >= currentDictationTarget.length) {
+                    indicator.classList.remove('animate-audio-pulse');
+                    return;
+                }
+
+                const char = currentDictationTarget[index];
+                speakLetterInDialect(char, currentDictationDialect);
+
+                index++;
+                setTimeout(speakNextChar, 1000 / globalSpeechSpeed);
+            }
+
+            speakNextChar();
+        }
+
+        function toggleDictationHint() {
+            const hintText = document.getElementById('dictation-hint-text');
+            hintText.innerText = `Largo: ${currentDictationTarget.length} chars | Inicia: '${currentDictationTarget[0]}' | Dialecto: ${currentDictationDialect}`;
+            hintText.classList.toggle('hidden');
+        }
+
+        function checkDictationAnswer(e) {
+            e.preventDefault();
+            const userInput = document.getElementById('dictation-user-input').value.trim().toUpperCase();
+            if (!userInput) return;
+
+            const feedback = document.getElementById('dictation-feedback');
+            const title = document.getElementById('feedback-title');
+            const detail = document.getElementById('feedback-detail');
+            const icon = document.getElementById('feedback-icon');
+
+            feedback.classList.remove('hidden');
+
+            if (userInput === currentDictationTarget.toUpperCase()) {
+                scoreCorrect++;
+                scoreStreak++;
+                feedback.className = "p-4 rounded-lg border text-sm font-bold flex items-center justify-between bg-emerald-950/80 border-emerald-500 text-emerald-200";
+                icon.innerText = "✓";
+                title.innerText = "Transmisión Confirmada";
+                detail.innerText = `Identificación exacta: ${currentDictationTarget} (${currentDictationDialect})`;
+            } else {
+                scoreIncorrect++;
+                scoreStreak = 0;
+                feedback.className = "p-4 rounded-lg border text-sm font-bold flex items-center justify-between bg-red-950/80 border-red-500 text-red-200";
+                icon.innerText = "✗";
+                title.innerText = "Error de Transcripción";
+                detail.innerText = `Correcto: ${currentDictationTarget} (Ingresó: ${userInput})`;
+            }
+
+            updateScoreboard();
+        }
+
+        function nextDictationQuestion() {
+            generateNewDictationTarget();
+        }
+
+        function updateScoreboard() {
+            document.getElementById('score-correct').innerText = scoreCorrect;
+            document.getElementById('score-incorrect').innerText = scoreIncorrect;
+            document.getElementById('score-streak').innerText = `${scoreStreak} 🔥`;
+        }
+
+        function resetScoreboard() {
+            scoreCorrect = 0;
+            scoreIncorrect = 0;
+            scoreStreak = 0;
+            updateScoreboard();
+        }
+
+        /* ====================================================================
+           6. GENERAL TAB SWITCHER LOGIC
+           ==================================================================== */
+        function switchTab(tabId) {
+            stopSpelling();
+            window.speechSynthesis.cancel();
+
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap text-gray-400 hover:text-white hover:bg-gna-card border border-transparent";
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const activeNavBtn = document.getElementById('nav-' + tabId);
+            if (activeNavBtn) {
+                activeNavBtn.className = "nav-btn active-tab flex items-center gap-2 px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap bg-gna-emerald text-gna-gold border border-gna-gold/40 shadow-md";
+            }
+
+            if (tabId === 'tab-practice' && !currentDictationTarget) {
+                generateNewDictationTarget();
+            }
+        }
+
+        /* ====================================================================
+           7. INITIALIZATION ON PAGE LOAD
+           ==================================================================== */
+        window.onload = function() {
+            initSpeechSynthesis();
+            renderAlphabetGrid();
+            renderSpellerBreakdown();
+        };
+
+    </script>
+</body>
+</html>
